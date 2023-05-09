@@ -3504,14 +3504,6 @@
 						"$ref": "AAAAAAGIANwmMiNQuh8="
 					},
 					"name": "uploadImage"
-				},
-				{
-					"_type": "UMLOperation",
-					"_id": "AAAAAAGIAO7ZUCPMc8s=",
-					"_parent": {
-						"$ref": "AAAAAAGIANwmMiNQuh8="
-					},
-					"name": "showPreview"
 				}
 			]
 		},
@@ -3709,30 +3701,13 @@
 											"height": 13,
 											"text": "+uploadImage()",
 											"horizontalAlignment": 0
-										},
-										{
-											"_type": "UMLOperationView",
-											"_id": "AAAAAAGIAQhedyYk+Ys=",
-											"_parent": {
-												"$ref": "AAAAAAGIAQhedCYCzVM="
-											},
-											"model": {
-												"$ref": "AAAAAAGIAO7ZUCPMc8s="
-											},
-											"font": "Arial;13;0",
-											"left": 341,
-											"top": 446,
-											"width": 117.01904296875,
-											"height": 13,
-											"text": "+showPreview()",
-											"horizontalAlignment": 0
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 336,
 									"top": 426,
 									"width": 127.01904296875,
-									"height": 38
+									"height": 23
 								},
 								{
 									"_type": "UMLReceptionCompartmentView",

@@ -48,21 +48,6 @@ const yolov5_weight = 'https://raw.githubusercontent.com/Jian-Nam/YOLOv5_model/m
 app.post("/api/files/images", upload.single('img'),  async(req, res) => {
     const image_path = req.file.path;
     // console.log(req.file)
-
- 
-    const buffer =  fs.readFileSync(image_path)
-    // console.log(typeof buffer)
-
-    imageTensor =  tfNode.node.decodeImage(buffer)
-
-
-    const detector = await tf.loadGraphModel(yolov5_weight);
-    let [modelWidth, modelHeight] =  detector.inputs[0].shape.slice(1, 3)
-    converted_img = tf.image.resizeBilinear(imageTensor, [modelWidth, modelHeight]).expandDims(0)
-    detect_res = await detector.executeAsync(converted_img)
-    
-    const [boxes, scores, classes, valid_detections] = detect_res
-    console.log(boxes.dataSync())
     
     if(image_path === undefined) {
         return res.status(400).send( "failed")

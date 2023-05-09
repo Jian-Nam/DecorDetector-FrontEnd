@@ -1,13 +1,9 @@
+import DetectFurnituresUI from "./DetectFurnituresUI";
 
-import UserInterface from './ui';
-import ObjectDetection from './objectDetection'
-
-const SERVER_URL = 'http://localhost:5000'
 function App() {
   return (
     <div className = "inputOutput">
-      <UserInterface/>
-      <ObjectDetection/>
+      <DetectFurnituresUI/>
     </div>
   );
 }
