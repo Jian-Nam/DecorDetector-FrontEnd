@@ -2,9 +2,9 @@ import { useState, useRef } from 'react';
 import DetectFurnitures from './DetectFurnitures';
 import './DetectFurnituresUI.css'
 
-const DetectFurnituresUI = ()=>{
+const DetectFurnituresUI = (ctrl)=>{
     const [imgFile, setImgFile] = useState("")
-    const [control, setControl] = useState(new DetectFurnitures())
+    const [control, setControl] = useState(ctrl)
 
     const imgRef = useRef();
     const imgfileRef = useRef();
@@ -12,7 +12,6 @@ const DetectFurnituresUI = ()=>{
     const uploadImage = async() => {
         await showPreview();
         await control.listFurnitures(imgRef.current);
-        console.log(imgRef.current)
     }
 
     async function showPreview() {

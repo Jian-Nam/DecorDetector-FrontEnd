@@ -1,7 +1,15 @@
 import * as tf from '@tensorflow/tfjs';
 
 class MultiDetectionModel {
-    constructor (){       }
+    constructor (){  
+        this.createDetector = this.createDetector.bind(this)
+        this.listFurnitures = this.listFurnitures.bind(this)
+        }
+
+    async createDetector() {
+            const yolov5_weight = 'https://raw.githubusercontent.com/Jian-Nam/YOLOv5_model/main/model.json'
+            return tf.loadGraphModel(yolov5_weight); 
+        }
 
     async listFurnitures(pixels){
         if(!this.detector){
@@ -18,10 +26,7 @@ class MultiDetectionModel {
         console.log(boxes.dataSync())
     }
 
-    async createDetector() {
-        const yolov5_weight = 'https://raw.githubusercontent.com/Jian-Nam/YOLOv5_model/main/model.json'
-        return tf.loadGraphModel(yolov5_weight); 
-    }
+
 }
 
 export default MultiDetectionModel
