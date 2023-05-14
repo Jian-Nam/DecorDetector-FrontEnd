@@ -1,4 +1,3 @@
-import DetectFurnituresUI from "./DetectFurnituresUI";
 import DetectFurnitures from "./DetectFurnitures";
 
 function App() {
@@ -6,8 +5,7 @@ function App() {
 
   return (
     <div className = "inputOutput">
-      {/* <DetectFurnituresUI/> */}
-      {DF.interface}
+      {DF.getInterface()}
     </div>
   );
 }

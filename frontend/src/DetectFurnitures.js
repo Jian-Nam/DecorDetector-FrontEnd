@@ -3,14 +3,19 @@ import MultiDetectionModel from './MultiDetectionModel'
 
 class DetectFurnitures {
     constructor(){
-        this.interface = DetectFurnituresUI(this)
+        this.interface = DetectFurnituresUI(this);
         this.MDM = new MultiDetectionModel();
 
-        this.listFurnitures = this.listFurnitures.bind(this)
+        this.listFurnitures = this.listFurnitures.bind(this);
+        this.getInterface = this.getInterface.bind(this);
     };
 
+    getInterface(){
+        return this.interface
+    }
+
     async listFurnitures(pixels) {
-        await this.MDM.listFurnitures(pixels);
+        return await this.MDM.listFurnitures(pixels);
     };
 
 

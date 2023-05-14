@@ -1,3 +1,22 @@
-.preview{
+
+
+#canvas-wrapper{
     width:50%;
+    height:100vh;
+}
+
+#canvas-wrapper > #image{
+    position: absolute;
+    width: 50%;
+    opacity: 100%;
+}
+
+#output{
+    position: absolute;
+}
+
+#upload{
+    position: absolute;
+    top:0;
+    left:50%;
 }
