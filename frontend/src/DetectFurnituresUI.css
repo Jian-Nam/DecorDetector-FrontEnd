@@ -1,18 +1,19 @@
-
-
 #canvas-wrapper{
-    width:50%;
-    height:200px;
+    position:relative;
+    width:800px;
+    height:800px;
+    
 }
 
 #canvas-wrapper > #image{
-    position: absolute;
-    width: 50%;
-    opacity: 100%;
+    vertical-align: center;
+    object-fit: contain;
+    width:100%;
 }
 
-#output{
-    position: absolute;
+#canvas-wrapper > #output{
+    position:absolute;
+    left:0;
 }
 
 #upload{

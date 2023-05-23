@@ -1,13 +1,13 @@
-import DetectFurnitures from "./DetectFurnitures";
+import DetectFurnituresUI from "./DetectFurnituresUI";
 import SearchFurnituresUI from "./SearchFurnituresUI"
+import './App.css'
 
 function App() {
-  const DF = new DetectFurnitures();
 
   return (
-    <div className = "inputOutput">
-      {DF.getInterface()}
-      <SearchFurnituresUI/>
+    <div className = "container">
+      <DetectFurnituresUI className = "item"/>
+      <SearchFurnituresUI className = "item"/>
     </div>
   );
 }

@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect} from 'react';
 import {ImageList, ImageListItem} from '@mui/material'
 
 //import './SearchFurnituresUI.css'
-import SearchFurnitures from './SearchFurnitures';
 import WebDataLoder from './WebDataLoader';
 
 const SearchFurnituresUI = (ctrl)=>{

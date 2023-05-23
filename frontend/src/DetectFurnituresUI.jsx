@@ -1,12 +1,11 @@
 import React, { useState, useRef, useEffect} from 'react';
 
 import './DetectFurnituresUI.css'
-import DetectFurnitures from './DetectFurnitures';
+import MultiDetectionModel from './MultiDetectionModel'
 
 const DetectFurnituresUI = (ctrl)=>{
-    const [imgFile, setImgFile] = useState("");
-    const [control, setControl] = useState(ctrl);
     const [ctx, setCtx] = useState();
+    const [multiDetectionModel, setMDM] = useState(new MultiDetectionModel)
 
     const imgRef = useRef();
     const imgfileRef = useRef();
@@ -24,14 +23,17 @@ const DetectFurnituresUI = (ctrl)=>{
 
     const uploadImage = async() => {
         const targetImgRef = await showPreview();
-        const detectionData = await control.listFurnitures(targetImgRef);
+        resizeCanvas();
+        const detectionData = await multiDetectionModel.listFurnitures(targetImgRef);
         // console.log(`${detectionData.validDetections[0]} objects detected`)
         drawBoxes(detectionData)
     }
 
     const resizeCanvas = () => {
+        let tctx = ctx;
         canvasRef.current.width = imgRef.current.width;
         canvasRef.current.height = imgRef.current.height;
+        setCtx(ctx);
         //console.log(canvasRef.current.width);
     }
 
@@ -44,14 +46,13 @@ const DetectFurnituresUI = (ctrl)=>{
                 // setImgFile(reader.result);
                 imgRef.current.src = reader.result
                 resolve(imgRef.current)
-
             };
         })
 
     };
 
     function drawBoxes(detectionData) {
-        resizeCanvas();
+
         const dd = detectionData
         for(let i = 0; i < dd.validDetections[0]; i++){
             let [x1, y1, x2, y2] = dd.boxes.slice(i*4, (i+1)*4);
@@ -72,19 +73,7 @@ const DetectFurnituresUI = (ctrl)=>{
     }
       
     return (
-      <div className="FileInput">
-        <div id ="canvas-wrapper">
-            <img
-                id = "image"
-                src = ""
-                ref = {imgRef}
-            />
-            <canvas
-                id="output"
-                ref={canvasRef}
-            >
-            </canvas>
-        </div>
+      <div>
         <div id = "upload-wrapper">
             <input 
                 type="file"
@@ -94,6 +83,21 @@ const DetectFurnituresUI = (ctrl)=>{
                 ref={imgfileRef}
             />
         </div>
+        <div id ="canvas-wrapper">
+            <img
+                id = "image"
+                src = ""
+                ref = {imgRef}
+            />
+            <canvas
+                id="output"
+                ref={canvasRef}
+                height = "0"
+            >
+            </canvas>
+
+        </div>
+
       </div>
     );
   }
