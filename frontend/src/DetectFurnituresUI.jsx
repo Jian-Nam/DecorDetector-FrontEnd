@@ -13,26 +13,26 @@ const DetectFurnituresUI = (ctrl)=>{
     const canvasRef = useRef();
 
     useEffect(() => {
-        const context = canvasRef.current.getContext("2d")
-        setCtx(context)
+        const context = canvasRef.current.getContext("2d");
+        setCtx(context);
+
+        // window.addEventListener('resize', resizeCanvas);
+        // return()=>{
+        //     window.removeEventListener('resize', resizeCanvas);
+        // }
     });
 
     const uploadImage = async() => {
-        await showPreview();
-        console.log(imgRef.current);
-        await startDetection();
-    }
-
-    const startDetection = async() =>{
-        const detectionData = await control.listFurnitures(imgRef.current);
-        console.log(detectionData)
-        resizeCanvas();
+        const targetImgRef = await showPreview();
+        const detectionData = await control.listFurnitures(targetImgRef);
+        // console.log(`${detectionData.validDetections[0]} objects detected`)
         drawBoxes(detectionData)
     }
 
-    function resizeCanvas(){
-        canvasRef.current.width = imgRef.current.width
-        canvasRef.current.height = imgRef.current.height
+    const resizeCanvas = () => {
+        canvasRef.current.width = imgRef.current.width;
+        canvasRef.current.height = imgRef.current.height;
+        //console.log(canvasRef.current.width);
     }
 
     function showPreview() {
@@ -43,14 +43,15 @@ const DetectFurnituresUI = (ctrl)=>{
             reader.onloadend = async() => {
                 // setImgFile(reader.result);
                 imgRef.current.src = reader.result
-                resolve("success")
+                resolve(imgRef.current)
+
             };
         })
 
     };
 
     function drawBoxes(detectionData) {
-
+        resizeCanvas();
         const dd = detectionData
         for(let i = 0; i < dd.validDetections[0]; i++){
             let [x1, y1, x2, y2] = dd.boxes.slice(i*4, (i+1)*4);
@@ -63,7 +64,7 @@ const DetectFurnituresUI = (ctrl)=>{
             const cls = dd.classes[i];
             const score = dd.scores[i].toFixed(2);
 
-            console.log(`${x1}, ${y1}, ${width}, ${height}`);
+            // console.log(`${x1}, ${y1}, ${width}, ${height}`);
             ctx.strokeStyle = "#00ffff";
             ctx.lineWidth = 4;
             ctx.strokeRect(x1, y1, width, height);
@@ -73,10 +74,8 @@ const DetectFurnituresUI = (ctrl)=>{
     return (
       <div className="FileInput">
         <div id ="canvas-wrapper">
-
             <img
                 id = "image"
-                // src={imgFile ? imgFile : ""}
                 src = ""
                 ref = {imgRef}
             />

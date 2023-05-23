@@ -1,4 +1,5 @@
 import DetectFurnitures from "./DetectFurnitures";
+import SearchFurnituresUI from "./SearchFurnituresUI"
 
 function App() {
   const DF = new DetectFurnitures();
@@ -6,6 +7,7 @@ function App() {
   return (
     <div className = "inputOutput">
       {DF.getInterface()}
+      <SearchFurnituresUI/>
     </div>
   );
 }

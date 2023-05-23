@@ -13,11 +13,9 @@ class DetectFurnitures {
     getInterface(){
         return this.interface
     }
-
+    
     async listFurnitures(pixels) {
         return await this.MDM.listFurnitures(pixels);
     };
-
-
 }
 export default DetectFurnitures

@@ -2,7 +2,7 @@
 
 #canvas-wrapper{
     width:50%;
-    height:100vh;
+    height:200px;
 }
 
 #canvas-wrapper > #image{
@@ -16,7 +16,4 @@
 }
 
 #upload{
-    position: absolute;
-    top:0;
-    left:50%;
 }

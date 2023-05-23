@@ -11,25 +11,32 @@ class MultiDetectionModel {
             return tf.loadGraphModel(yolov5_weight); 
         }
 
-    async listFurnitures(pixels, userInterface){
+    async listFurnitures(pixels){
         if(!this.detector){
             this.detector = await this.createDetector();
             this.modelWidth = this.detector.inputs[0].shape[1]
             this.modelHeight =  this.detector.inputs[0].shape[2]
         }
 
-        const imageTensor = tf.browser.fromPixels(pixels)
-        const converted_img = tf.image.resizeBilinear(imageTensor, [this.modelWidth, this.modelHeight]).div(255.0).expandDims(0)
+        const imageTensor =  tf.browser.fromPixels(pixels);
+
+        const converted_img =  tf.image.resizeBilinear(imageTensor, [this.modelWidth, this.modelHeight]).div(255.0).expandDims(0);
+
         const detect_res = await this.detector.executeAsync(converted_img)
 
-        const [boxes, scores, classes, validDetections] = detect_res;
+
+        console.log(detect_res[0].dataSync());
 
         const detectionData = {
-            boxes: boxes.dataSync(),
-            scores : scores.dataSync(),
-            classes : classes.dataSync(),
-            validDetections: validDetections.dataSync()
+            boxes: detect_res[0].dataSync(),
+            scores : detect_res[1].dataSync(),
+            classes : detect_res[2].dataSync(),
+            validDetections: detect_res[3].dataSync()
         };
+
+        // console.log(detectionData.boxes)
+
+
         tf.dispose(detect_res);
 
         return detectionData
