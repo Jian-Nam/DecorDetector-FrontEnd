@@ -3,8 +3,7 @@ const cors = require('cors');
 const bodyParser = require("body-parser");
 const multer  = require('multer');
 const util = require('util');
-const tf = require('@tensorflow/tfjs');
-const tfNode = require('@tensorflow/tfjs-node');
+const tf = require('@tensorflow/tfjs-node');
 const fs = require("fs");
 
 const app = express();
@@ -39,10 +38,6 @@ app.get('/', (req, res) => {
     res.send("Hello here is server");
     console.log("Hello");
 });
-
-
-const yolov5_weight = 'https://raw.githubusercontent.com/Jian-Nam/YOLOv5_model/main/model.json'
-
 
 
 app.post("/api/files/images", upload.single('img'),  async(req, res) => {

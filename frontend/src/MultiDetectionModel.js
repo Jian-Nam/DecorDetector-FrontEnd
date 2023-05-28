@@ -8,7 +8,8 @@ class MultiDetectionModel {
 
     async createDetector() {
             const yolov5_weight = 'https://raw.githubusercontent.com/Jian-Nam/YOLOv5_model/main/model.json'
-            return tf.loadGraphModel(yolov5_weight); 
+            const model = await tf.loadGraphModel(yolov5_weight); 
+            return model;
         }
 
     async listFurnitures(pixels){
