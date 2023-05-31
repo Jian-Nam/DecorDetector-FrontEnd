@@ -2,46 +2,95 @@ import * as tf from '@tensorflow/tfjs';
 
 class MultiDetectionModel {
     constructor (){  
-        this.createDetector = this.createDetector.bind(this)
-        this.listFurnitures = this.listFurnitures.bind(this)
+        this.semaphore = false;
+        this.model = false;
+        this.loadModel = this.loadModel.bind(this);
+        this.getModel = this.getModel.bind(this);
+        this.listFurnitures = this.listFurnitures.bind(this);
+        this.modelUrl = 'https://raw.githubusercontent.com/Jian-Nam/YOLOv5_model/main/model.json' //trained Yolov5
         }
 
-    async createDetector() {
-            const yolov5_weight = 'https://raw.githubusercontent.com/Jian-Nam/YOLOv5_model/main/model.json'
-            const model = await tf.loadGraphModel(yolov5_weight); 
+    async loadModel() {
+            const model = await tf.loadGraphModel(this.modelUrl); 
             return model;
         }
 
-    async listFurnitures(pixels){
-        if(!this.detector){
-            this.detector = await this.createDetector();
-            this.modelWidth = this.detector.inputs[0].shape[1]
-            this.modelHeight =  this.detector.inputs[0].shape[2]
+    async getModel(){
+        if(!this.model){
+            if(!this.semaphore){
+                this.semaphore = true;
+                console.log("Loading model");
+                this.model = await this.loadModel();
+                this.modelWidth = this.model.inputs[0].shape[1];
+                this.modelHeight =  this.model.inputs[0].shape[2];
+                console.log("Model loaded");
+            }else {
+                console.log("Model loading now")
+                await setTimeout(this.getModel, 1000)
+            }
         }
+        return this.model
+    }
+
+    async listFurnitures(pixels){
+        const model = await this.getModel();
+
 
         const imageTensor =  tf.browser.fromPixels(pixels);
 
-        const converted_img =  tf.image.resizeBilinear(imageTensor, [this.modelWidth, this.modelHeight]).div(255.0).expandDims(0);
+        //console.log(`${widthOrigin}, ${heightOrigin}`)
 
-        const detect_res = await this.detector.executeAsync(converted_img)
+        const image = imageTensor.div(255.0).expandDims(0);
 
+        const widthOrigin = image.shape[2];
+        const heightOrigin = image.shape[1];
 
-        console.log(detect_res[0].dataSync());
+        const resizedImage =  tf.image.resizeBilinear(image, [this.modelWidth, this.modelHeight]);
+        const [boxes, scores, classes, numBoxes] = await model.executeAsync(resizedImage);
 
         const detectionData = {
-            boxes: detect_res[0].dataSync(),
-            scores : detect_res[1].dataSync(),
-            classes : detect_res[2].dataSync(),
-            validDetections: detect_res[3].dataSync()
+            boxes: boxes.dataSync(),
+            scores : scores.dataSync(),
+            classes : classes.dataSync(),
+            numBoxes: numBoxes.dataSync()
         };
 
-        // console.log(detectionData.boxes)
+        boxes.dispose();
+        scores.dispose();
+        classes.dispose();
+        numBoxes.dispose();
+
+        const slicedImages = [];
+        for(let i = 0; i < detectionData.numBoxes[0]; i++){
+            const boxIndices = tf.zeros([1], 'int32');
+
+            let [x1, y1, x2, y2] = detectionData.boxes.slice(i*4, (i+1)*4);
+            const normWidth = x2-x1;
+            const normHeight = y2-y1;
+
+            let width = Math.round(normWidth * widthOrigin);
+            let height = Math.round(normHeight * heightOrigin);
+
+            
+
+            const croppedImage =  tf.image.cropAndResize(image, [[y1, x1, y2, x2]], boxIndices, [height, width]).squeeze();
 
 
-        tf.dispose(detect_res);
+            slicedImages.push(croppedImage);
+            const canvas = document.createElement('canvas');
+            canvas.width = width
+            canvas.height = height
+            await tf.browser.toPixels(croppedImage , canvas);
+            document.body.appendChild(canvas);
+
+        }
+        detectionData.slicedImages = slicedImages
+        //console.log(detectionData)
+        
+
+
 
         return detectionData
-
     }
 
 

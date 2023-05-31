@@ -8,11 +8,13 @@ class SimilarityCheckingModel {
         this.loadModel = this.loadModel.bind(this);
         this.getModel = this.getModel.bind(this);
         this.getEmbedding = this.getEmbedding.bind(this);
+        this.getImageElement = this.getImageElement.bind(this);
+        this.modelUrl = 'https://raw.githubusercontent.com/Jian-Nam/Resnet50_model/main/model.json' //resnet50
+        this.proxyUrl = "https://nja-test.herokuapp.com/";
     }
 
     async loadModel() {
-        const resnet50_weight = 'https://raw.githubusercontent.com/Jian-Nam/Resnet50_model/main/model.json'
-        const model = await tf.loadLayersModel(resnet50_weight); 
+        const model = await tf.loadLayersModel(this.modelUrl); //Load resnet50
         return model 
     }
 
@@ -27,7 +29,7 @@ class SimilarityCheckingModel {
                 console.log("Model loaded");
             }else {
                 console.log("Model loading now")
-                await setTimeout(this.getModel, 10000)
+                await setTimeout(this.getModel, 1000)
             }
         }
         return this.model
@@ -36,7 +38,7 @@ class SimilarityCheckingModel {
     async getImageElement(imgUrl){
         let image = new Image();
         image.crossOrigin = 'Anonymous';
-        image.src = "https://nja-test.herokuapp.com/" + imgUrl
+        image.src = this.proxyUrl + imgUrl
         return new Promise((resolve) => {
             image.onload = ()=>{
                 resolve(image);
@@ -51,8 +53,8 @@ class SimilarityCheckingModel {
 
         const converted_img = tf.tidy(() => {
             const imageTensor =  tf.browser.fromPixels(imageElement);
-            const converted_img =  tf.image.resizeBilinear(imageTensor, [this.modelWidth, this.modelHeight]).div(255.0).expandDims(0);
-            return converted_img
+            const converted_image =  tf.image.resizeBilinear(imageTensor, [this.modelWidth, this.modelHeight]).div(255.0).expandDims(0);
+            return converted_image
         })
 
         const embedding = model.predict(converted_img);

@@ -54,7 +54,7 @@ const DetectFurnituresUI = (ctrl)=>{
     function drawBoxes(detectionData) {
 
         const dd = detectionData
-        for(let i = 0; i < dd.validDetections[0]; i++){
+        for(let i = 0; i < dd.numBoxes[0]; i++){
             let [x1, y1, x2, y2] = dd.boxes.slice(i*4, (i+1)*4);
             x1 *= canvasRef.current.width;
             x2 *= canvasRef.current.width;
@@ -67,7 +67,7 @@ const DetectFurnituresUI = (ctrl)=>{
 
             // console.log(`${x1}, ${y1}, ${width}, ${height}`);
             ctx.strokeStyle = "#00ffff";
-            ctx.lineWidth = 4;
+            ctx.lineWidth = 3;
             ctx.strokeRect(x1, y1, width, height);
         }
     }
