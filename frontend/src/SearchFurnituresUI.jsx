@@ -6,7 +6,7 @@ import ResultPrintUnit from './ResultPrintUnit';
 //import './SearchFurnituresUI.css'
 import WebDataLoder from './WebDataLoader';
 
-const SearchFurnituresUI = (props)=>{
+const SearchFurnituresUI = ({imageList, labelList})=>{
     const [itemDataList , setItemDataList] = useState([]);
     const [similarityCheckingModel, setSCM] = useState(new SimilarityCheckingModel);
 
@@ -15,10 +15,10 @@ const SearchFurnituresUI = (props)=>{
         itemDataList.splice(0, itemDataList.length);
         setItemDataList([]);
 
-        props.imageList.map((imageTensor) => {
-            getImg(1, imageTensor)
+        imageList.map((imageTensor, index) => {
+            getImg(1, imageTensor, index)
         });
-        }, [props.imageList]
+        }, [imageList]
     );
 
     
@@ -28,7 +28,7 @@ const SearchFurnituresUI = (props)=>{
     );
 
 
-    const getImg = async(category, imageTensor) =>{
+    const getImg = async(category, imageTensor, index) =>{
         const webDataLoder = new WebDataLoder;
         const newItemData = await webDataLoder.loadImg(category, 1, 51);
 
@@ -49,7 +49,8 @@ const SearchFurnituresUI = (props)=>{
 
         const itemData = {
             originImgSrc : firstElementDataUrl,
-            searchedItems : sortedItemData
+            originImgLabel : labelList[index],
+            searchedItems : sortedItemData,
         };
 
         //setItemDataList(itemDataList.concat(itemData));
@@ -69,7 +70,7 @@ const SearchFurnituresUI = (props)=>{
             {
             itemDataList[0] && 
                 itemDataList.map((itemData, index) => (
-                    <ResultPrintUnit itemData = {itemData} key = {index}/>
+                    <ResultPrintUnit originImg = {{src: itemData.originImgSrc, label: itemData.originImgLabel}} searchedItems = {itemData.searchedItems} key = {index}/>
                 ))
             }   
         </div>

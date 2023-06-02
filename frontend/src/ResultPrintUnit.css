@@ -4,16 +4,33 @@
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-between;
-    margin-top: 50px;
-    margin-bottom: 50px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    background-color: rgba(0, 0, 0, .05);
 }
 .unitItem{
     width: 150px;
     height: 180px;
     object-fit: contain;
+    padding: 25px;
+    font-size: 14px;
+    text-align: center;
+    background-color: white;
 }
+
+.shadow{
+    box-shadow: 3px 3px 10px 1px rgba(0, 0, 0, .05);
+}
+
 .itemImg{
     width: 150px;
     height: 150px;
     object-fit: contain;
+}
+
+.productName{
+    font-weight: 500;
+}
+.similarity{
+    
 }

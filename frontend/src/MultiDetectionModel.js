@@ -71,20 +71,12 @@ class MultiDetectionModel {
             let width = Math.round(normWidth * widthOrigin);
             let height = Math.round(normHeight * heightOrigin);
 
-            
-
             const croppedImage =  tf.image.cropAndResize(image, [[y1, x1, y2, x2]], boxIndices, [height, width]).squeeze();
-
-
-            slicedImages.push(croppedImage);
-
+            slicedImages[i] = croppedImage;
         }
         detectionData.slicedImages = slicedImages
         //console.log(detectionData)
         
-
-
-
         return detectionData
     }
 

@@ -8,6 +8,7 @@ const DetectFurnituresUI = (ctrl)=>{
     const [ctx, setCtx] = useState();
     const [multiDetectionModel, setMDM] = useState(new MultiDetectionModel);
     const [targetImgList, setTargetImgList] = useState();
+    const [imgLabelList, setImgLabelList] = useState();
 
     const imgRef = useRef();
     const imgfileRef = useRef();
@@ -28,6 +29,7 @@ const DetectFurnituresUI = (ctrl)=>{
         resizeCanvas();
         const detectionData = await multiDetectionModel.listFurnitures(targetImgRef);
         setTargetImgList(detectionData.slicedImages);
+        setImgLabelList(detectionData.classes);
         drawBoxes(detectionData)
     }
 
@@ -97,7 +99,7 @@ const DetectFurnituresUI = (ctrl)=>{
             >
             </canvas>
         </div>
-        {targetImgList ? <SearchFurnituresUI imageList = {targetImgList}  /> : null}
+        {targetImgList&&imgLabelList ? <SearchFurnituresUI labelList = {imgLabelList} imageList = {targetImgList}  /> : null}
       </div>
     );
   }

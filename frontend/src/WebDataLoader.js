@@ -1,3 +1,4 @@
+import CategoryData from "./CategoryData";
 class WebDataLoder {
     constructor(){
         this.categoryData =  {
