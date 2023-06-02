@@ -1,26 +1,40 @@
 import React, { useState, useRef, useEffect} from 'react';
-import {ImageList, ImageListItem} from '@mui/material'
+//import {ImageList, ImageListItem} from '@mui/material'
 import SimilarityCheckingModel from './SimilarityCheckingModel';
+import ResultPrintUnit from './ResultPrintUnit';
 
 //import './SearchFurnituresUI.css'
 import WebDataLoder from './WebDataLoader';
 
-const SearchFurnituresUI = (ctrl)=>{
-    const [itemData, setItemData] = useState([{mainImageUrl:"", title:""}]);
+const SearchFurnituresUI = (props)=>{
+    const [itemDataList , setItemDataList] = useState([]);
     const [similarityCheckingModel, setSCM] = useState(new SimilarityCheckingModel);
 
-
-    const imgRef = useRef();
-    const imgfileRef = useRef();
-
     useEffect(() => {
-    });
+        //itemDataList.length = 0;
+        itemDataList.splice(0, itemDataList.length);
+        setItemDataList([]);
+
+        props.imageList.map((imageTensor) => {
+            getImg(1, imageTensor)
+        });
+        }, [props.imageList]
+    );
+
+    
+    useEffect(() => {
+        //console.log(itemDataList)
+        }, [itemDataList]
+    );
 
 
-    const getImg = async(category) =>{
+    const getImg = async(category, imageTensor) =>{
         const webDataLoder = new WebDataLoder;
         const newItemData = await webDataLoder.loadImg(category, 1, 51);
-        const firstElementEmbedding = await similarityCheckingModel.getEmbedding(newItemData[0].mainImageUrl);
+
+        const firstElementEmbedding = await similarityCheckingModel.getEmbeddingWithTensor(imageTensor);
+        const firstElementDataUrl = await similarityCheckingModel.tensorToDataUrl(imageTensor)
+
 
         const cosineSimilarityData = await Promise.all(
             newItemData.map(async(item)=>{
@@ -30,31 +44,36 @@ const SearchFurnituresUI = (ctrl)=>{
                 return item;
         }));
 
-        //console.log(cosineSimilarityData);
+
         const sortedItemData = cosineSimilarityData.sort((A, B)=>{return B.cosineSimilarity - A.cosineSimilarity})
-        //console.log(sortedItemData);
-        setItemData(sortedItemData);
+
+        const itemData = {
+            originImgSrc : firstElementDataUrl,
+            searchedItems : sortedItemData
+        };
+
+        //setItemDataList(itemDataList.concat(itemData));
+        //setItemDataList([...itemDataList, itemData]);
+        itemDataList.push(itemData);
+        setItemDataList(itemDataList)
+        console.log(itemDataList);
+        // console.log(itemDataList);
     };
 
     return (
+
         <div>
-            <button onClick={()=>{getImg(1)}}>1</button>
-            <button onClick={()=>{getImg(2)}}>2</button>
-            <button onClick={()=>{getImg(3)}}>3</button>
-            <button onClick={()=>{getImg(6)}}>6</button>
-            <ImageList sx={{ width: 800, height: 1000 }} cols={3} rowHeight={300}>
-            {itemData.map((item) => (
-                <ImageListItem key={item.id}>
-                <img
-                    src={`${item.mainImageUrl}?w=164&h=164&fit=crop&auto=format`}
-                    alt={item.id}
-                    loading="lazy"
-                />
-                <div dangerouslySetInnerHTML={{__html: `Similarity: ${(item.cosineSimilarity*100).toFixed(2)}%`}}></div>
-                </ImageListItem>
-            ))}
-            </ImageList>
+            {/* <div>
+                {console.log(itemDataList)}
+            </div> */}
+            {
+            itemDataList[0] && 
+                itemDataList.map((itemData, index) => (
+                    <ResultPrintUnit itemData = {itemData} key = {index}/>
+                ))
+            }   
         </div>
     );
+            
   }
   export default SearchFurnituresUI;

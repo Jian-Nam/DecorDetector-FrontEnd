@@ -1,0 +1,19 @@
+
+.unitContainer{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+.unitItem{
+    width: 150px;
+    height: 180px;
+    object-fit: contain;
+}
+.itemImg{
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+}

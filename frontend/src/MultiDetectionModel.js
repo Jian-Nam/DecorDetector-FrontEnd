@@ -77,11 +77,6 @@ class MultiDetectionModel {
 
 
             slicedImages.push(croppedImage);
-            const canvas = document.createElement('canvas');
-            canvas.width = width
-            canvas.height = height
-            await tf.browser.toPixels(croppedImage , canvas);
-            document.body.appendChild(canvas);
 
         }
         detectionData.slicedImages = slicedImages

@@ -1,9 +1,10 @@
 import * as tf from '@tensorflow/tfjs';
+import Queue from './Queue';
 //import * as tf from '@tensorflow/tfjs-node'
 
 class SimilarityCheckingModel {
     constructor (){ 
-        this.semaphore = false; 
+        this.queue = new Queue(); 
         this.model = false;
         this.loadModel = this.loadModel.bind(this);
         this.getModel = this.getModel.bind(this);
@@ -18,19 +19,13 @@ class SimilarityCheckingModel {
         return model 
     }
 
-    async getModel(){
+    getModel = async() =>{
         if(!this.model){
-            if(!this.semaphore){
-                this.semaphore = true;
-                console.log("Loading model");
-                this.model = await this.loadModel();
-                this.modelWidth = this.model.inputs[0].shape[1];
-                this.modelHeight =  this.model.inputs[0].shape[2];
-                console.log("Model loaded");
-            }else {
-                console.log("Model loading now")
-                await setTimeout(this.getModel, 1000)
-            }
+            console.log("Loading model");
+            this.model = await this.loadModel();
+            this.modelWidth = this.model.inputs[0].shape[1];
+            this.modelHeight =  this.model.inputs[0].shape[2];
+            console.log("Model loaded");
         }
         return this.model
     }
@@ -45,6 +40,30 @@ class SimilarityCheckingModel {
             }
         })
     }
+
+    async getEmbeddingWithTensor(imgTensor){
+        const model = await this.queue.add(this.getModel);
+        //console.log(this.queue.queue)
+
+        const converted_img = tf.tidy(() => {
+            const converted_image =  tf.image.resizeBilinear(imgTensor, [this.modelWidth, this.modelHeight]).expandDims(0);
+            return converted_image
+        })
+
+        const embedding = model.predict(converted_img);
+        const data = embedding.dataSync();
+        embedding.dispose();
+        return data
+    }
+
+    async tensorToDataUrl(tensor3d){
+        const canvas = document.createElement('canvas');
+        canvas.width = tensor3d.shape[1]
+        canvas.height = tensor3d.shape[0]
+        await tf.browser.toPixels(tensor3d , canvas);
+        return canvas.toDataURL();
+    }
+    
 
 
     async getEmbedding(imgUrl){

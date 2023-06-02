@@ -2,10 +2,12 @@ import React, { useState, useRef, useEffect} from 'react';
 
 import './DetectFurnituresUI.css'
 import MultiDetectionModel from './MultiDetectionModel'
+import SearchFurnituresUI from './SearchFurnituresUI';
 
 const DetectFurnituresUI = (ctrl)=>{
     const [ctx, setCtx] = useState();
-    const [multiDetectionModel, setMDM] = useState(new MultiDetectionModel)
+    const [multiDetectionModel, setMDM] = useState(new MultiDetectionModel);
+    const [targetImgList, setTargetImgList] = useState();
 
     const imgRef = useRef();
     const imgfileRef = useRef();
@@ -25,7 +27,7 @@ const DetectFurnituresUI = (ctrl)=>{
         const targetImgRef = await showPreview();
         resizeCanvas();
         const detectionData = await multiDetectionModel.listFurnitures(targetImgRef);
-        // console.log(`${detectionData.validDetections[0]} objects detected`)
+        setTargetImgList(detectionData.slicedImages);
         drawBoxes(detectionData)
     }
 
@@ -52,7 +54,6 @@ const DetectFurnituresUI = (ctrl)=>{
     };
 
     function drawBoxes(detectionData) {
-
         const dd = detectionData
         for(let i = 0; i < dd.numBoxes[0]; i++){
             let [x1, y1, x2, y2] = dd.boxes.slice(i*4, (i+1)*4);
@@ -95,9 +96,8 @@ const DetectFurnituresUI = (ctrl)=>{
                 height = "0"
             >
             </canvas>
-
         </div>
-
+        {targetImgList ? <SearchFurnituresUI imageList = {targetImgList}  /> : null}
       </div>
     );
   }
