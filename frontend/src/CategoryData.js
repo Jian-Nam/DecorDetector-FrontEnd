@@ -1,31 +1,35 @@
-class CategoryData{
-    constructor(){
+class CategoryData {
+    constructor() {
         this.data = {
-            0: {labelName :'Bathroom_cabinet', } ,
-            1: {labelName :'Bed',} ,
-            2: {labelName :'Bench',} ,
-            3: {labelName :'Bookcase',} ,
-            4: {labelName :'Cabinetry',} ,
-            5: {labelName :'Cat_furniture',} ,
-            6: {labelName :'Chest_of_drawers',} ,
-            7: {labelName :'Closet',} ,
-            8: {labelName :'Couch',} ,
-            9: {labelName :'Cupboard',} ,
-            10: {labelName :'Desk',} ,
-            11: {labelName :'Dog_bed',} ,
-            12: {labelName :'Filing_cabinet',} , 
-            13: {labelName :'Nightstand',} ,
-            14: {labelName :'Shelf',} ,
-            15: {labelName :'Stool',} ,
-            16: {labelName :'Table',} ,
-            17: {labelName :'Wall_clock',} ,
-            18: {labelName :'Wardrobe',} ,
-            19: {labelName :'Wine_rack',} ,
+            0: { labelName: 'Bathroom_cabinet', ikeaCode: "st003"},
+            1: { labelName: 'Bed', ikeaCode: "bm003" },
+            2: { labelName: 'Bench', ikeaCode: "700319" },
+            3: { labelName: 'Bookcase', ikeaCode: "st002" },
+            4: { labelName: 'Cabinetry', ikeaCode: "st003" },
+            5: { labelName: 'Cat_furniture', ikeaCode: "bc002" },
+            6: { labelName: 'Chest_of_drawers', ikeaCode: "st004" },
+            7: { labelName: 'Closet', ikeaCode: "19053" },
+            8: { labelName: 'Couch', ikeaCode: "fu003" },
+            9: { labelName: 'Cupboard', ikeaCode: "st003" },
+            10: { labelName: 'Desk', ikeaCode: "fu004" },
+            11: { labelName: 'Dog_bed', ikeaCode: "bc002" },
+            12: { labelName: 'Filing_cabinet', ikeaCode: "st003" },
+            13: { labelName: 'Nightstand', ikeaCode: "li001" },
+            14: { labelName: 'Shelf', ikeaCode: "st002" },
+            15: { labelName: 'Stool', ikeaCode: "22659" },
+            16: { labelName: 'Table', ikeaCode: "fu004" },
+            17: { labelName: 'Wall_clock', ikeaCode: "10785" },
+            18: { labelName: 'Wardrobe', ikeaCode: "19053" },
+            19: { labelName: 'Wine_rack', ikeaCode: "15952" },
         }
         this.getLabel = this.getLabel.bind(this)
     }
-    getLabel(index){
+    getLabel(index) {
         return this.data[index].labelName;
+    }
+
+    getIkeaCode(index) {
+        return this.data[index].ikeaCode;
     }
 }
 
