@@ -48,8 +48,9 @@ const SearchFurnituresUI = ({imageList, labelList})=>{
 
         const cosineSimilarityData = await Promise.all(
             newItemData.map(async(item)=>{
-                const embedding = await similarityCheckingModel.getEmbedding(item.mainImageUrl);
-                //const embedding = await similarityCheckingModel.getEmbedding(item.contextualImageUrl);
+                let embedding = null
+ 
+                embedding = await similarityCheckingModel.getEmbedding(item.mainImageUrl);
                 //console.log(item.contextualImageUrl)
                 const cosineSimilarity = similarityCheckingModel.getCosineSimilarity(firstElementEmbedding, embedding);
                 item.cosineSimilarity = cosineSimilarity;

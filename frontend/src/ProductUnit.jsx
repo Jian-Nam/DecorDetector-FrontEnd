@@ -4,7 +4,7 @@ const ProductUnit = ({product})=>{
     const [isHovering, setIsHovering] = useState(false);
 
     const goPage = (e) => {
-        console.log(product)
+        //console.log(product)
         window.open(product.pipUrl) 
     }
 
