@@ -5,7 +5,9 @@ const ProductUnit = ({product})=>{
 
     const goPage = (e) => {
         //console.log(product)
-        window.open(product.pipUrl) 
+        if(product.pipUrl){
+            window.open(product.pipUrl) 
+        }
     }
 
     const handleMouseOver = () => {
@@ -24,11 +26,17 @@ const ProductUnit = ({product})=>{
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}
         >
-            <img className = 'itemImg' src = {product.mainImageUrl}/>
-            <div>
-                <div className='productName'>{product.name}</div>
-                <div className='similarity'>Similarity: { (product.cosineSimilarity*100).toFixed(2) }%</div>
-            </div>
+            { product?
+                <div>
+                    <img className = 'itemImg' src = {product.mainImageUrl}/>
+                    <div>
+                        <div className='productName'>{product.name}</div>
+                        <div className='similarity'>Similarity: { (product.cosineSimilarity*100).toFixed(2) }%</div>
+                    </div>
+                </div> 
+                : 
+                <img src = 'Pulse.gif'/>
+            }
         </div>
     )
 }

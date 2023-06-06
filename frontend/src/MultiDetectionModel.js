@@ -19,11 +19,11 @@ class MultiDetectionModel {
         if(!this.model){
             if(!this.semaphore){
                 this.semaphore = true;
-                console.log("Loading model");
+                console.log("Loading detection model");
                 this.model = await this.loadModel();
                 this.modelWidth = this.model.inputs[0].shape[1];
                 this.modelHeight =  this.model.inputs[0].shape[2];
-                console.log("Model loaded");
+                console.log("Detection model loaded");
             }else {
                 console.log("Model loading now")
                 await setTimeout(this.getModel, 1000)

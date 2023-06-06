@@ -6,7 +6,7 @@ import SearchFurnituresUI from './SearchFurnituresUI';
 
 const DetectFurnituresUI = (ctrl)=>{
     const [ctx, setCtx] = useState();
-    const [multiDetectionModel, setMDM] = useState(new MultiDetectionModel);
+    const [multiDetectionModel, dummy] = useState(new MultiDetectionModel);
     const [targetImgList, setTargetImgList] = useState();
     const [imgLabelList, setImgLabelList] = useState();
 

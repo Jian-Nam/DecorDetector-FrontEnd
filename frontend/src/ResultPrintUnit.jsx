@@ -1,22 +1,70 @@
-import React, { useState, useRef, useEffect} from 'react';
+import React, { useMemo, useState, useRef, useEffect } from 'react';
 import './ResultPrintUnit.css'
 import ProductUnit from './ProductUnit';
 import CategoryData from './CategoryData';
+import WebDataLoader from "./WebDataLoader.js"
 
-const ResultPrintUnit = ({originImg, searchedItems})=>{
+const ResultPrintUnit = ({ imageTensor, label , similarityModel, categoryData, webDataLoader }) => {
+    const [originImgSrc, setOriginImgSrc] = useState(null);
+    const [result, setResult] = useState(null);
 
-    const categoryData = new CategoryData
+    useEffect(() => {
+        async function getOriginImgSrc(){
+            const ois =  await similarityModel.tensorToDataUrl(imageTensor);
+            setOriginImgSrc(ois)
+        }
+        getOriginImgSrc();
+    }, [imageTensor])
+
+
+    useEffect(() => {
+        setResult(null);
+        getImg();
+    }, [originImgSrc]);
+
+
+
+    const getImg = async () => {
+        const ikeaCode = categoryData.getIkeaCode(label);
+        const webData = await webDataLoader.loadImg(ikeaCode, 1, 51);
+
+        const originImgEmbedding = await similarityModel.getEmbeddingWithTensor(imageTensor);
+
+        const cosineSimilarityData = await Promise.all(
+            webData.map(async (Data) => {
+                let embedding = null
+
+                embedding = await similarityModel.getEmbedding(Data.mainImageUrl);
+                const cosineSimilarity = similarityModel.getCosineSimilarity(originImgEmbedding, embedding);
+                Data.cosineSimilarity = cosineSimilarity;
+
+                return Data;
+            }));
+
+        const sortedData = cosineSimilarityData.sort((A, B) => { return B.cosineSimilarity - A.cosineSimilarity })
+
+        setResult(sortedData);
+    };
+    
+
 
     return (
-        <div className = 'unitContainer'>
-            <div className = 'unitItem'>
-                <img className = 'itemImg' src = {originImg.src}/>
-                <div>{categoryData.getLabel(originImg.label)}</div>
+        <div>
+            <div className='unitContainer'>
+                { originImgSrc ?
+                <div className='unitItem'>
+                    <img className='itemImg' src={originImgSrc} />
+                    <div>{categoryData.getLabel(label)}</div>
+                </div>
+                : null
+                }
+                <ProductUnit product={ result ? result[0]: null} />
+                <ProductUnit product={ result ? result[1]: null} />
+                <ProductUnit product={ result ? result[2]: null} />
+
             </div>
-            <ProductUnit product = {searchedItems[0]} />
-            <ProductUnit product = {searchedItems[1]} />
-            <ProductUnit product = {searchedItems[2]} />
         </div>
+
     )
 }
 
