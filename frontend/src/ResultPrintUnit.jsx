@@ -1,8 +1,7 @@
-import React, { useMemo, useState, useRef, useEffect } from 'react';
+import React, { useMemo, useState, useRef, useEffect, forwardRef } from 'react';
 import './ResultPrintUnit.css'
 import ProductUnit from './ProductUnit';
-import CategoryData from './CategoryData';
-import WebDataLoader from "./WebDataLoader.js"
+import ProgressBar from './ProgressBar';
 
 const ResultPrintUnit = ({ imageTensor, label , similarityModel, categoryData, webDataLoader }) => {
     const [originImgSrc, setOriginImgSrc] = useState(null);
@@ -23,7 +22,6 @@ const ResultPrintUnit = ({ imageTensor, label , similarityModel, categoryData, w
     }, [originImgSrc]);
 
 
-
     const getImg = async () => {
         const ikeaCode = categoryData.getIkeaCode(label);
         const webData = await webDataLoader.loadImg(ikeaCode, 1, 51);
@@ -37,13 +35,13 @@ const ResultPrintUnit = ({ imageTensor, label , similarityModel, categoryData, w
                 embedding = await similarityModel.getEmbedding(Data.mainImageUrl);
                 const cosineSimilarity = similarityModel.getCosineSimilarity(originImgEmbedding, embedding);
                 Data.cosineSimilarity = cosineSimilarity;
-
                 return Data;
             }));
 
         const sortedData = cosineSimilarityData.sort((A, B) => { return B.cosineSimilarity - A.cosineSimilarity })
 
         setResult(sortedData);
+        
     };
     
 
@@ -61,7 +59,7 @@ const ResultPrintUnit = ({ imageTensor, label , similarityModel, categoryData, w
                 <ProductUnit product={ result ? result[0]: null} />
                 <ProductUnit product={ result ? result[1]: null} />
                 <ProductUnit product={ result ? result[2]: null} />
-
+                
             </div>
         </div>
 

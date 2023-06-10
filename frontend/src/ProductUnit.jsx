@@ -35,7 +35,7 @@ const ProductUnit = ({product})=>{
                     </div>
                 </div> 
                 : 
-                <img src = 'Pulse.gif'/>
+                <div>Loading...</div>
             }
         </div>
     )

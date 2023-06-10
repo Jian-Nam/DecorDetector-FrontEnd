@@ -53,7 +53,7 @@ class SimilarityCheckingModel {
         const embedding = model.predict(converted_img);
         const data = embedding.dataSync();
         embedding.dispose();
-        console.log("getEmbeddingWithTensor ", tf.memory().numTensors);
+        //console.log("getEmbeddingWithTensor ", tf.memory().numTensors);
         return data
     }
 
@@ -62,7 +62,7 @@ class SimilarityCheckingModel {
         canvas.width = tensor3d.shape[1]
         canvas.height = tensor3d.shape[0]
         await tf.browser.toPixels(tensor3d , canvas);
-        console.log("tensorToDataUrl ", tf.memory().numTensors);
+        //console.log("tensorToDataUrl ", tf.memory().numTensors);
         return canvas.toDataURL();
     }
     
@@ -81,7 +81,7 @@ class SimilarityCheckingModel {
         const embedding = model.predict(converted_img);
         const data = embedding.dataSync();
         embedding.dispose();
-        console.log("getEmbedding ", tf.memory().numTensors);
+        //console.log("getEmbedding ", tf.memory().numTensors);
         return data
     }
 
