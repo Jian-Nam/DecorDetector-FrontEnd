@@ -10,7 +10,7 @@ class CategoryData {
             6: { labelName: 'Shelf', ikeaCode: "st002" },
             7: { labelName: 'Stool', ikeaCode: "22659" },
             8: { labelName: 'Table', ikeaCode: "fu004" },
-
+            9: { labelName: 'All', ikeaCode: "fu001"}
         }
         this.getLabel = this.getLabel.bind(this)
     }

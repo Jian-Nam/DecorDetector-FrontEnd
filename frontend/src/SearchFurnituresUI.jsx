@@ -17,9 +17,9 @@ const SearchFurnituresUI = ({imageList, labelList})=>{
         <div>
             {
             (imageList && labelList) &&
-                imageList.map((imageTensor, index) => (
+                imageList.map((imageSrc, index) => (
                     <ResultPrintUnit 
-                        imageTensor = {imageTensor} 
+                        imageSrc = {imageSrc} 
                         label = {labelList[index]} 
                         key = {index}
                         similarityModel={similarityModel}

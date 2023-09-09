@@ -33,7 +33,8 @@ class SimilarityCheckingModel {
     async getImageElement(imgUrl){
         let image = new Image();
         image.crossOrigin = 'Anonymous';
-        image.src = this.proxyUrl + imgUrl
+        //image.src = this.proxyUrl + imgUrl
+        image.src =  imgUrl
         return new Promise((resolve) => {
             image.onload = ()=>{
                 resolve(image);

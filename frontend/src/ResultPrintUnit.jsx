@@ -3,17 +3,17 @@ import './ResultPrintUnit.css'
 import ProductUnit from './ProductUnit';
 import ProgressBar from './ProgressBar';
 
-const ResultPrintUnit = ({ imageTensor, label , similarityModel, categoryData, webDataLoader }) => {
+const ResultPrintUnit = ({ imageSrc, label , similarityModel, categoryData, webDataLoader }) => {
     const [originImgSrc, setOriginImgSrc] = useState(null);
     const [result, setResult] = useState(null);
 
     useEffect(() => {
         async function getOriginImgSrc(){
-            const ois =  await similarityModel.tensorToDataUrl(imageTensor);
-            setOriginImgSrc(ois)
+            //const ois =  await similarityModel.tensorToDataUrl(imageTensor);
+            setOriginImgSrc(imageSrc)
         }
         getOriginImgSrc();
-    }, [imageTensor])
+    }, [imageSrc])
 
 
     useEffect(() => {
@@ -26,7 +26,8 @@ const ResultPrintUnit = ({ imageTensor, label , similarityModel, categoryData, w
         const ikeaCode = categoryData.getIkeaCode(label);
         const webData = await webDataLoader.loadImg(ikeaCode, 1, 51);
 
-        const originImgEmbedding = await similarityModel.getEmbeddingWithTensor(imageTensor);
+        //const originImgEmbedding = await similarityModel.getEmbeddingWithTensor(imageTensor);
+        const originImgEmbedding = await similarityModel.getEmbedding(imageSrc);
 
         const cosineSimilarityData = await Promise.all(
             webData.map(async (Data) => {

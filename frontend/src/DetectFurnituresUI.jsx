@@ -1,37 +1,48 @@
 import React, { useState, useRef, useEffect} from 'react';
 
+import axios from 'axios'
 import './DetectFurnituresUI.css'
-import MultiDetectionModel from './MultiDetectionModel'
 import SearchFurnituresUI from './SearchFurnituresUI';
 
 const DetectFurnituresUI = (ctrl)=>{
     const [ctx, setCtx] = useState();
-    const [multiDetectionModel, dummy] = useState(new MultiDetectionModel);
-    const [targetImgList, setTargetImgList] = useState();
-    const [imgLabelList, setImgLabelList] = useState();
+    const [targetImgList, setTargetImgList] = useState([]);
+    const [imgLabelList, setImgLabelList] = useState([]);
+
+    const [imgFile, setImgFile] = useState();
+    const [previewSrc, setPreviewSrc] = useState();
+
+    const [onClickCoordinate, setOnClickCoordinate] = useState({
+        coordinateX: '',
+        coordinateY: '',
+      });
+
 
     const imgRef = useRef();
-    const imgfileRef = useRef();
+    const fileRef = useRef();
     const canvasRef = useRef();
 
     useEffect(() => {
         const context = canvasRef.current.getContext("2d");
         setCtx(context);
-
-        // window.addEventListener('resize', resizeCanvas);
-        // return()=>{
-        //     window.removeEventListener('resize', resizeCanvas);
-        // }
     });
 
-    const uploadImage = async() => {
-        const targetImgRef = await showPreview();
+    useEffect(() => {
+        if(onClickCoordinate.coordinateX !== '' && onClickCoordinate.coordinateX !==''){
+            console.log("Photo is clicked on: ", onClickCoordinate);
+            sendFrom();
+        }
+    }, [onClickCoordinate]);
+
+    useEffect(() => {
         resizeCanvas();
-        const detectionData = await multiDetectionModel.listFurnitures(targetImgRef);
-        setTargetImgList(detectionData.slicedImages);
-        setImgLabelList(detectionData.classes);
-        drawBoxes(detectionData)
+    }, [previewSrc]);
+
+    const segmentImgUpload = async(e) => {
+        setImgFile(e.target.files[0])
+        showPreview();
     }
+
 
     const resizeCanvas = () => {
         let tctx = ctx;
@@ -42,37 +53,60 @@ const DetectFurnituresUI = (ctrl)=>{
     }
 
     function showPreview() {
-        return new Promise((resolve, reject) => {
-            const file = imgfileRef.current.files[0];
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onloadend = async() => {
-                // setImgFile(reader.result);
-                imgRef.current.src = reader.result
-                resolve(imgRef.current)
-            };
-        })
-
+        const file = fileRef.current.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = async() => {
+            setPreviewSrc(reader.result)
+        };
     };
 
-    function drawBoxes(detectionData) {
-        const dd = detectionData
-        for(let i = 0; i < dd.numBoxes[0]; i++){
-            let [x1, y1, x2, y2] = dd.boxes.slice(i*4, (i+1)*4);
-            x1 *= canvasRef.current.width;
-            x2 *= canvasRef.current.width;
-            y1 *= canvasRef.current.height;
-            y2 *= canvasRef.current.height;
-            const width = x2-x1;
-            const height = y2-y1;
-            const cls = dd.classes[i];
-            const score = dd.scores[i].toFixed(2);
 
-            // console.log(`${x1}, ${y1}, ${width}, ${height}`);
-            ctx.strokeStyle = "#00ffff";
-            ctx.lineWidth = 3;
-            ctx.strokeRect(x1, y1, width, height);
-        }
+    const sendFrom = async() => {
+
+        let formData = new FormData();
+        
+        formData.append('image', imgFile)
+        formData.append('pointX', onClickCoordinate.coordinateX)
+        formData.append('pointY', onClickCoordinate.coordinateY)
+
+        axios({
+            url: "http://127.0.0.1:5000/segment",
+            method: 'POST',
+            data: formData,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            responseType:'blob',
+          })
+            .then(response => {
+                const responseBlob =  response.data
+                //imgRef.current.src = URL.createObjectURL(responseBlob);
+                const newtargetImgSrc =  URL.createObjectURL(responseBlob);
+                setTargetImgList([newtargetImgSrc, ...targetImgList])
+                setImgLabelList([9, ...imgLabelList])
+            })
+            .catch(error => {
+              console.error(error);
+            });
+    }
+
+
+    const pinPoint = (e) => {
+        const xInBrowser = e.nativeEvent.offsetX
+        const yInBrowser = e.nativeEvent.offsetY
+
+        setOnClickCoordinate(prev => ({
+            ...prev,
+            coordinateX: Math.round(xInBrowser / imgRef.current.width *  imgRef.current.naturalWidth) ,
+            coordinateY: Math.round(yInBrowser / imgRef.current.height *  imgRef.current.naturalHeight) ,
+          }));
+        
+        // canvas 에 점찍기
+        ctx.beginPath();
+        ctx.arc(xInBrowser, yInBrowser, 5, 0, 2*Math.PI);
+        ctx.fillStyle = "#FFA500";
+        ctx.fill()
     }
       
     return (
@@ -82,20 +116,22 @@ const DetectFurnituresUI = (ctrl)=>{
                 type="file"
                 accept="image/*"
                 id="upload"
-                onChange={uploadImage}
-                ref={imgfileRef}
+                onChange={segmentImgUpload}
+                ref={fileRef}
             />
         </div>
         <div id ="canvas-wrapper">
             <img
                 id = "image"
-                src = ""
+                src = {previewSrc}
                 ref = {imgRef}
+                onLoad={resizeCanvas}
             />
             <canvas
                 id="output"
                 ref={canvasRef}
                 height = "0"
+                onClick = {pinPoint}
             >
             </canvas>
         </div>
