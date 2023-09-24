@@ -7,6 +7,7 @@ Clone reposiory and install npm modules with:
 
 ```
 git clone https://github.com/Jian-Nam/DecorDetector-FrontEnd.git
+cd DecorDetector-FrontEnd
 npm install
 ```
 
