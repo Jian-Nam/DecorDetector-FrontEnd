@@ -1,5 +1,15 @@
 # Development repository for DecorDetector Frontend
 
+## Installation
+
+If you already installed node.js and npm, 
+Clone reposiory and install npm modules with:
+
+```
+git clone https://github.com/Jian-Nam/DecorDetector-FrontEnd.git
+npm install
+```
+
 ## Run 
 
 You can run and test DecorDetector React App with:
