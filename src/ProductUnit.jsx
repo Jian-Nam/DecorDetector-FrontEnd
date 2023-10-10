@@ -5,8 +5,8 @@ const ProductUnit = ({product})=>{
 
     const goPage = (e) => {
         //console.log(product)
-        if(product.pipUrl){
-            window.open(product.pipUrl) 
+        if(product.link){
+            window.open(product.link) 
         }
     }
 
@@ -28,7 +28,7 @@ const ProductUnit = ({product})=>{
         >
             { product?
                 <div>
-                    <img className = 'itemImg' src = {product.mainImageUrl}/>
+                    <img className = 'itemImg' src = {product.Image}/>
                     <div>
                         <div className='productName'>{product.name}</div>
                         <div className='similarity'>Similarity: { (product.cosineSimilarity*100).toFixed(2) }%</div>

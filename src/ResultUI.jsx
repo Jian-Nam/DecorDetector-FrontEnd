@@ -9,13 +9,13 @@ const ResultUI = ({resultData}) => {
         <div>
             <div className='unitContainer'>
                 <div className='unitItem'>
-                    <img className='itemImg' src={resultData.originImg.src} />
-                    <div>{resultData.originImg.label}</div>
+                    <img className='itemImg' src={resultData.segmentedImage} />
+                    <div></div>
                 </div>
 
-                <ProductUnit product={ resultData.sortedProducts[0] } />
-                <ProductUnit product={ resultData.sortedProducts[1] } />
-                <ProductUnit product={ resultData.sortedProducts[2] } />
+                <ProductUnit product={ resultData.similarProducts[0] } />
+                <ProductUnit product={ resultData.similarProducts[1] } />
+                <ProductUnit product={ resultData.similarProducts[2] } />
                 
             </div>
         </div>

@@ -2,9 +2,6 @@ import React, { useState, useRef, useEffect} from 'react';
 
 import axios from 'axios'
 import './DetectFurnituresUI.css'
-
-import SimilarityCheckingModel from "./SimilarityCheckingModel.js"
-import WebDataLoder from './WebDataLoader';
 import CategoryData from './CategoryData';
 
 import SearchResultsUI from './SearchResultsUI';
@@ -17,8 +14,6 @@ const DetectFurnituresUI = (ctrl)=>{
     });
 
     const [searchResults , setSearchResults] = useState([]);
-    const [targetImgList, setTargetImgList] = useState([]);
-    const [imgLabelList, setImgLabelList] = useState([]);
 
     const [imgFile, setImgFile] = useState();
     const [previewSrc, setPreviewSrc] = useState();
@@ -28,9 +23,6 @@ const DetectFurnituresUI = (ctrl)=>{
         pointY: '',
       });
 
-
-    const [similarityModel, dummy1] = useState( new SimilarityCheckingModel());
-    const [webDataLoader, dummy2] = useState( new WebDataLoder());
     const [categoryData, dummy3] = useState( new CategoryData() );
 
     const imgRef = useRef();
@@ -39,7 +31,7 @@ const DetectFurnituresUI = (ctrl)=>{
 
     useEffect(()=>{
         if(targetImg.src !== '' && targetImg.label !== ''){
-            searchProducts()
+
         }
     }, [targetImg])
 
@@ -119,57 +111,23 @@ const DetectFurnituresUI = (ctrl)=>{
         formData.append('pointY', point.pointY)
 
         axios({
-            url: "http://127.0.0.1:5000/segment",
+            url: "http://127.0.0.1:8080/products/similar",
             method: 'POST',
             data: formData,
             headers: {
               'Content-Type': 'multipart/form-data',
             },
-            responseType:'blob',
           })
             .then(response => {
-                const responseBlob =  response.data
-                //imgRef.current.src = URL.createObjectURL(responseBlob);
-                const newtargetImgSrc =  URL.createObjectURL(responseBlob);
-                setTargetImg(prev => ({
-                    ...prev,
-                    src: newtargetImgSrc ,
-                    label: 9 ,
-                  }))
-                // setTargetImgList([newtargetImgSrc, ...targetImgList])
-                // setImgLabelList([9, ...imgLabelList])
+                console.log(response.data);
+                setSearchResults([response.data, ...searchResults]);
             })
             .catch(error => {
               console.error(error);
             });
     }
 
-    const searchProducts = async () => {
-        const ikeaCode = categoryData.getIkeaCode(targetImg.label);
-        const webData = await webDataLoader.loadImg(ikeaCode, 1, 51);
 
-        //const originImgEmbedding = await similarityModel.getEmbeddingWithTensor(imageTensor);
-        const originImgEmbedding = await similarityModel.getEmbedding(targetImg.src);
-
-        const cosineSimilarityData = await Promise.all(
-            webData.map(async (Data) => {
-                let embedding = null
-
-                embedding = await similarityModel.getEmbedding(Data.mainImageUrl);
-                const cosineSimilarity = similarityModel.getCosineSimilarity(originImgEmbedding, embedding);
-                Data.cosineSimilarity = cosineSimilarity;
-                return Data;
-            }));
-
-        const sortedData = cosineSimilarityData.sort((A, B) => { return B.cosineSimilarity - A.cosineSimilarity })
-        
-        const newResult = {
-            originImg: targetImg,
-            sortedProducts: sortedData,
-        }
-        setSearchResults([newResult, ...searchResults]);
-    };
-    
       
     return (
       <div>
