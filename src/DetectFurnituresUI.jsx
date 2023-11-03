@@ -7,6 +7,9 @@ import CategoryData from './CategoryData';
 import SearchResultsUI from './SearchResultsUI';
 
 const DetectFurnituresUI = (ctrl)=>{
+    const backendUrl = "http://localhost:8080"
+    const envBackendUrl = process.env.REACT_APP_BACKEND_URL
+
     const [ctx, setCtx] = useState();
     const [targetImg, setTargetImg] = useState({
         src: '',
@@ -42,7 +45,7 @@ const DetectFurnituresUI = (ctrl)=>{
 
     useEffect(() => {
         if(point.pointX !== '' && point.pointY !==''){
-            console.log("Photo is clicked on: ", point);
+            // console.log("Photo is clicked on: ", point);
             sendFrom();
         }
     }, [point]);
@@ -87,7 +90,7 @@ const DetectFurnituresUI = (ctrl)=>{
     const onClickCanvas = (e) => {
         const xInBrowser = e.nativeEvent.offsetX
         const yInBrowser = e.nativeEvent.offsetY
-
+        
         setPoint(prev => ({
             ...prev,
             pointX: Math.round(xInBrowser / imgRef.current.width *  imgRef.current.naturalWidth) ,
@@ -109,9 +112,9 @@ const DetectFurnituresUI = (ctrl)=>{
         formData.append('image', imgFile)
         formData.append('pointX', point.pointX)
         formData.append('pointY', point.pointY)
-
+        console.log("ENV TEST: " + envBackendUrl)
         axios({
-            url: "http://127.0.0.1:8080/products/similar",
+            url: backendUrl + "/products/similar",
             method: 'POST',
             data: formData,
             headers: {
@@ -119,7 +122,7 @@ const DetectFurnituresUI = (ctrl)=>{
             },
           })
             .then(response => {
-                console.log(response.data);
+                console.log("BACKEND RESPONSE STATUS: " + response.status);
                 setSearchResults([response.data, ...searchResults]);
             })
             .catch(error => {
