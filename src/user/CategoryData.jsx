@@ -21,6 +21,10 @@ class CategoryData {
     getIkeaCode(index) {
         return this.data[index].ikeaCode;
     }
+
+    getData(){
+        return this.data;
+    }
 }
 
 export default CategoryData

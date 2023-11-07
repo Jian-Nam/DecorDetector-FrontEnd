@@ -1,0 +1,100 @@
+.resultWrapper{
+    margin-top: 20px;
+}
+.resultTitle{
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+.horizontalLine{
+    margin-bottom: 30px;
+}
+.unitContainer{
+    height: 390px;
+    width: 800px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content:flex-start;
+    overflow: hidden;
+    overflow-x: scroll;
+
+    scroll-behavior: smooth;
+}
+.unitContainer::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollButton{
+    position: absolute;
+    width:100px;
+    height:100px;
+    border-radius: 50%;
+    background-color: black;
+    opacity: 10%;
+
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    color: white;
+}
+
+.leftButton{
+    left: 0px;
+}
+
+.rightButton{
+    right: 0px;
+}   
+
+.unitItem{
+    width: 240px;
+    height: 370px;
+    object-fit: contain;
+    font-size: 18px;
+    text-align: left;
+    margin-right: 10px;
+
+}
+
+
+
+.recommandedItem{
+    background-color:white ;
+}
+
+.targetItem{
+    background-color:white;
+}
+
+.shadow{
+    box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+    background-color: #FFC300;
+    color:white;
+}
+
+.itemImg{
+    width: 200px;
+    height: 200px;
+    padding: 20px;
+    background-color: white;
+    object-fit: contain;
+}
+
+.itemDescriptionWrapper{
+    display: flex;
+    align-items: center;
+    justify-content:center;
+}
+
+.itemDescription{
+    font-size: smaller;
+    width: 200px;
+}
+
+.productName{
+    font-weight: 500;
+}
+.similarity{
+    
+}

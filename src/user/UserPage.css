@@ -1,0 +1,57 @@
+body{
+    background-color:white;
+}
+.page{
+    padding:30px;
+}
+.subTitle{
+    font-size: 20px;
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+.manual{
+    margin-bottom: 10px;
+}
+
+#canvas-wrapper{
+    position:relative;
+    width:800px;
+    margin-bottom: 10px;
+}
+
+#canvas-wrapper > #image{
+    vertical-align: center;
+    object-fit: contain;
+    width:100%;
+}
+
+#canvas-wrapper > #output{
+    position:absolute;
+    left:0;
+}
+
+#upload-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#upload{
+    display: none;
+}
+
+.buttonBox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    width: 150px;
+    height: 40px;
+}
+.buttonText{
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: 700;
+
+}

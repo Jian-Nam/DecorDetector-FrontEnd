@@ -1,6 +1,26 @@
 *{
     margin:0;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 500;
 }
+.topBar{
+    border-bottom: 1px solid;
+    height:50px;
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content:flex-start;
+    align-items: center;
+}
+.title{
+    margin-left: 30px;
+    font-size: 25px;
+    font-weight: 900;
+}
+
+
 
 .container{
     display: flex;

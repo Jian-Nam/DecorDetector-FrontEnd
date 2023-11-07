@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect} from 'react';
+import React, { useState } from 'react';
 
-const ProductUnit = ({product})=>{
+const Product = ({product})=>{
     const [isHovering, setIsHovering] = useState(false);
 
     const goPage = (e) => {
@@ -21,7 +21,7 @@ const ProductUnit = ({product})=>{
 
     return (
         <div 
-            className = {`unitItem ${isHovering ? "shadow": ""}`} 
+            className = {`unitItem ${isHovering ? "shadow": ""} recommandedItem`} 
             onClick={goPage}
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}
@@ -29,9 +29,11 @@ const ProductUnit = ({product})=>{
             { product?
                 <div>
                     <img className = 'itemImg' src = {"http://localhost:8080/images/ikea?url=" + product.image}/>
-                    <div>
-                        <div className='productName'>{product.name}</div>
-                        <div className='similarity'>Similarity: { (product.cosineSimilarity*100).toFixed(2) }%</div>
+                    <div className='itemDescriptionWrapper'>
+                        <div className='itemDescription'>
+                            <div className='productName'>{product.name}</div>
+                            <div className='similarity'>Similarity: { (product.cosineSimilarity*100).toFixed(2) }%</div>
+                        </div>
                     </div>
                 </div> 
                 : 
@@ -42,4 +44,4 @@ const ProductUnit = ({product})=>{
 }
 
 
-export default ProductUnit;
+export default Product;

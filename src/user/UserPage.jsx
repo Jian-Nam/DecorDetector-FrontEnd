@@ -1,12 +1,11 @@
 import React, { useState, useRef, useEffect} from 'react';
 
 import axios from 'axios'
-import './DetectFurnituresUI.css'
-import CategoryData from './CategoryData';
+import './UserPage.css'
 
-import SearchResultsUI from './SearchResultsUI';
+import ResultList from './ResultList';
 
-const DetectFurnituresUI = (ctrl)=>{
+const UserPage = (ctrl)=>{
     const backendUrl = "http://localhost:8080"
     const envBackendUrl = process.env.REACT_APP_BACKEND_URL
 
@@ -20,13 +19,12 @@ const DetectFurnituresUI = (ctrl)=>{
 
     const [imgFile, setImgFile] = useState();
     const [previewSrc, setPreviewSrc] = useState();
+    const [altSrc, setAltSrc] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
 
     const [point, setPoint] = useState({
         pointX: '',
         pointY: '',
       });
-
-    const [categoryData, dummy3] = useState( new CategoryData() );
 
     const imgRef = useRef();
     const fileRef = useRef();
@@ -88,20 +86,22 @@ const DetectFurnituresUI = (ctrl)=>{
     // ======== onClickCanvas ======== //
 
     const onClickCanvas = (e) => {
-        const xInBrowser = e.nativeEvent.offsetX
-        const yInBrowser = e.nativeEvent.offsetY
-        
-        setPoint(prev => ({
-            ...prev,
-            pointX: Math.round(xInBrowser / imgRef.current.width *  imgRef.current.naturalWidth) ,
-            pointY: Math.round(yInBrowser / imgRef.current.height *  imgRef.current.naturalHeight) ,
-          }));
-        
-        // canvas 에 점찍기
-        ctx.beginPath();
-        ctx.arc(xInBrowser, yInBrowser, 5, 0, 2*Math.PI);
-        ctx.fillStyle = "#FFA500";
-        ctx.fill()
+        if(previewSrc){
+            const xInBrowser = e.nativeEvent.offsetX
+            const yInBrowser = e.nativeEvent.offsetY
+            
+            setPoint(prev => ({
+                ...prev,
+                pointX: Math.round(xInBrowser / imgRef.current.width *  imgRef.current.naturalWidth) ,
+                pointY: Math.round(yInBrowser / imgRef.current.height *  imgRef.current.naturalHeight) ,
+            }));
+            
+            // canvas 에 점찍기
+            ctx.beginPath();
+            ctx.arc(xInBrowser, yInBrowser, 5, 0, 2*Math.PI);
+            ctx.fillStyle = "#FFA500";
+            ctx.fill()
+        }
     }
 
 
@@ -130,23 +130,17 @@ const DetectFurnituresUI = (ctrl)=>{
             });
     }
 
-
-      
     return (
-      <div>
-        <div id = "upload-wrapper">
-            <input 
-                type="file"
-                accept="image/*"
-                id="upload"
-                onChange={onChangeFile}
-                ref={fileRef}
-            />
+      <div className='page'>
+        <div class = "subTitle">Search Product</div>
+        <div class = 'manual'>
+            <div>1. 이미지를 업로드하세요</div>
+            <div>2. 이미지를 클릭하세요</div>
         </div>
         <div id ="canvas-wrapper">
             <img
                 id = "image"
-                src = {previewSrc}
+                src = {(previewSrc)? previewSrc:altSrc}
                 ref = {imgRef}
                 onLoad={onLoadPreview}
             />
@@ -158,9 +152,23 @@ const DetectFurnituresUI = (ctrl)=>{
             >
             </canvas>
         </div>
+        <div id = "upload-wrapper">
+            <label htmlFor="upload">
+                <div className="buttonBox">
+                    <div className='buttonText'>Upload Image</div>
+                </div>
+            </label>
+            <input 
+                type="file"
+                accept="image/jpg"
+                id="upload"
+                onChange={onChangeFile}
+                ref={fileRef}
+            />
+        </div>
 
-        {searchResults ? <SearchResultsUI searchResults = {searchResults}/>: null}
+        {searchResults ? <ResultList searchResults = {searchResults}/>: null}
       </div>
     );
   }
-  export default DetectFurnituresUI;
+  export default UserPage;
