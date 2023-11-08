@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 import CategoryData from '../user/CategoryData';
+import Button from '../Button';
 
 const AddIkeaData = ()=>{
 
@@ -28,6 +29,7 @@ const AddIkeaData = ()=>{
     const postData = async()=>{
         if(startValue=="" || endValue==""){
             alert("시작 범위와 끝 범위를 모두 입력하세요")
+            return;
         }
         try{
             let formData = new FormData();
@@ -51,11 +53,14 @@ const AddIkeaData = ()=>{
     }
 
     return (
-        <div>
+        <div className='pageCenterize'>
+        <div className='page'>
+        <div className='subTitle'>IKEA 데이터 추가하기</div>
             <div className="form-group">
-                <div>
+                <div className='inputSet'>
                     <label>가구 카테고리</label>
-                    <select         
+                    <select 
+                        className='inputBox'        
                         type="text" 
                         placeholder="가구 카테고리를 입력하세요"
                         value={categoryValue}
@@ -69,26 +74,32 @@ const AddIkeaData = ()=>{
                         }
                     </select>
                 </div>
-                <div>
+                <div className='inputSet'>
                     <label>이케아 데이터 범위 시작</label>
                     <input 
+                        className='inputBox'
                         type="number" 
                         placeholder="시작 값을 입력하세요"
                         value={startValue}
                         onChange={saveStartValue}
                     />
                 </div>
-                <div>
+                <div className='inputSet'>
                     <label >이케아 데이터 범위 끝</label>
                     <input 
+                        className='inputBox'
                         type="number" 
                         placeholder="끝 값을 입력하세요"
                         value={endValue}
                         onChange={saveEndValue}
                     />
                 </div>
+                <div onClick={postData}>
+                    <Button buttonText="등록"></Button>
+                </div>
             </div>
-            <button onClick={postData}>등록</button>
+
+        </div>
         </div>
     )
 }

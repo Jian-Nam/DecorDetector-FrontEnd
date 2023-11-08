@@ -49,16 +49,18 @@ const DataList = ()=>{
     }
 
     return (
-        <div>
-            <table >
+        <div className='pageCenterize'>
+        <div className='page'>
+            <div className='subTitle'>데이터 리스트</div>
+            <table className='dataTable' >
                 <thead>
                     <tr>
-                        <th>id</th>
-                        <th>image</th>
-                        <th>sub id</th>
-                        <th>product name</th>
-                        <th>link</th>
-                        <th>delete</th>
+                        <th>ID</th>
+                        <th>IMAGE</th>
+                        <th>SUB ID</th>
+                        <th>PRODUCT NAME</th>
+                        <th>LINK</th>
+                        <th>DELETE</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -94,6 +96,7 @@ const DataList = ()=>{
                     <span>...{ Math.floor(dataList.length/maxDataNumber)+1 }</span>
                 </div>
             }   
+        </div>
         </div>
     )
 }

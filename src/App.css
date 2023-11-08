@@ -5,7 +5,8 @@
     font-weight: 500;
 }
 .topBar{
-    border-bottom: 1px solid;
+    position:sticky;
+    top:0;
     height:50px;
     background-color: white;
     display: flex;
@@ -13,19 +14,73 @@
     flex-wrap: wrap;
     justify-content:flex-start;
     align-items: center;
+    z-index: 3;
+}
+.pageCenterize{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+
+}
+.page{
+    width:800px;
+    margin-top: 30px;
+
+}
+.navigator{
+    background-color: black ;
+    border-bottom: 10px solid white;
+    border-top: 3px solid black;
 }
 .title{
     margin-left: 30px;
     font-size: 25px;
     font-weight: 900;
 }
+.subTitle{
+    font-size: 20px;
+    font-weight: 900;
+    margin-bottom: 30px;
+}
+.buttonBox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 150px;
+    height: 40px;
+}
+.black{
+    background-color: black;
+    color: white;
+}
+.white{
+    background-color: white;
+    color: black;
+}
+.yellow{
+    background-color: #FFC300;
+    color: black;
+}
+.buttonText{
+
+    text-align: center;
+    vertical-align: middle;
+    font-weight: 700;
+
+}
 
 
 
 .container{
+
+}
+.flexContainer{
     display: flex;
+    align-items: center;
     flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;
+    flex-wrap: nowrap;
+    justify-content:flex-start;
 }
 

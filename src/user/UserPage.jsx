@@ -4,6 +4,7 @@ import axios from 'axios'
 import './UserPage.css'
 
 import ResultList from './ResultList';
+import Button from '../Button';
 
 const UserPage = (ctrl)=>{
     const backendUrl = "http://localhost:8080"
@@ -14,12 +15,13 @@ const UserPage = (ctrl)=>{
         src: '',
         label: '',
     });
+    const[enableSearch, setEnableSearch] = useState(true)
 
     const [searchResults , setSearchResults] = useState([]);
 
     const [imgFile, setImgFile] = useState();
     const [previewSrc, setPreviewSrc] = useState();
-    const [altSrc, setAltSrc] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
+    const [altSrc, setAltSrc] = useState("/images/UploadImage.png")
 
     const [point, setPoint] = useState({
         pointX: '',
@@ -30,11 +32,6 @@ const UserPage = (ctrl)=>{
     const fileRef = useRef();
     const canvasRef = useRef();
 
-    useEffect(()=>{
-        if(targetImg.src !== '' && targetImg.label !== ''){
-
-        }
-    }, [targetImg])
 
     useEffect(() => {
         const context = canvasRef.current.getContext("2d");
@@ -56,8 +53,11 @@ const UserPage = (ctrl)=>{
     // ======== onChangeFile ======== //
 
     const onChangeFile = async(e) => {
-        setImgFile(e.target.files[0])
-        showPreview();
+        if(e.target.files[0]){
+            setImgFile(e.target.files[0])
+            showPreview();
+            return;
+        }
     }
 
     function showPreview() {
@@ -86,6 +86,10 @@ const UserPage = (ctrl)=>{
     // ======== onClickCanvas ======== //
 
     const onClickCanvas = (e) => {
+        if(!enableSearch){
+            alert("결과를 받는중입니다. 기다려주세요.");
+            return;
+        }
         if(previewSrc){
             const xInBrowser = e.nativeEvent.offsetX
             const yInBrowser = e.nativeEvent.offsetY
@@ -106,7 +110,7 @@ const UserPage = (ctrl)=>{
 
 
     const sendFrom = async() => {
-
+        setEnableSearch(false)
         let formData = new FormData();
         
         formData.append('image', imgFile)
@@ -124,6 +128,7 @@ const UserPage = (ctrl)=>{
             .then(response => {
                 console.log("BACKEND RESPONSE STATUS: " + response.status);
                 setSearchResults([response.data, ...searchResults]);
+                setEnableSearch(true)
             })
             .catch(error => {
               console.error(error);
@@ -131,12 +136,22 @@ const UserPage = (ctrl)=>{
     }
 
     return (
-      <div className='page'>
-        <div class = "subTitle">Search Product</div>
-        <div class = 'manual'>
-            <div>1. 이미지를 업로드하세요</div>
-            <div>2. 이미지를 클릭하세요</div>
+      <div className='pageCenterize'>
+        <div className='page'>
+        <div className = "subTitle">Search Product</div>
+        <div className = 'description'>
+            <div>이 페이지는 이미지를 통해 가구 검색을 하기 위한 페이지 입니다.</div>
+            <div>하나의 이미지 내에서 원하는 부분만 골라 유사한 가구를 받아볼 수 </div>
+            <div>있습니다. 검색을 위해서 다음 메뉴얼을 따라주세요.</div>
         </div>
+        <div className='manual'>
+            <div className='manualTitle'>----------Manual----------</div>
+            <div className='manualText'>
+                <div>1. 이미지를 업로드하세요</div>
+                <div>2. 이미지에서 검색을 원하는 부분을 클릭하세요</div>
+            </div>
+        </div>
+
         <div id ="canvas-wrapper">
             <img
                 id = "image"
@@ -154,8 +169,8 @@ const UserPage = (ctrl)=>{
         </div>
         <div id = "upload-wrapper">
             <label htmlFor="upload">
+                <Button buttonText="Select Image"></Button>
                 <div className="buttonBox">
-                    <div className='buttonText'>Upload Image</div>
                 </div>
             </label>
             <input 
@@ -168,7 +183,9 @@ const UserPage = (ctrl)=>{
         </div>
 
         {searchResults ? <ResultList searchResults = {searchResults}/>: null}
+        </div>
       </div>
+
     );
   }
   export default UserPage;

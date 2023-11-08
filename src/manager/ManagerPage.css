@@ -1,0 +1,18 @@
+.inputSet{
+    position: relative;
+    margin-bottom: 20px;
+}
+.inputSet > .inputBox{
+    position: absolute;
+    width: 200px;
+    height:30px;
+    left:200px;
+    border: none;
+    background-color: #F8F9F9;
+}
+.exampleText{
+    color:gray;
+}
+.form-group{
+    padding-bottom: 30px;
+}
