@@ -19,6 +19,7 @@ const Product = ({product})=>{
       };
     
 
+    // img src 접근시 백엔드 proxy를 통해 CORS 회피
     return (
         <div 
             className = {`unitItem ${isHovering ? "shadow": ""} recommandedItem`} 
@@ -28,7 +29,7 @@ const Product = ({product})=>{
         >
             { product?
                 <div>
-                    <img className = 'itemImg' src = {"http://localhost:8080/images/ikea?url=" + product.image}/>
+                    <img className = 'itemImg' src = {process.env.REACT_APP_BACKEND_URL + "/images/ikea?url=" + product.image}/>
                     <div className='itemDescriptionWrapper'>
                         <div className='itemDescription'>
                             <div className='productName'>{product.name}</div>

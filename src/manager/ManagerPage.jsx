@@ -11,18 +11,13 @@ const ManagerPage = ()=>{
     const navigate = useNavigate();
 
     const goToDataListPage = () => {
-      navigate("manager/datalist");
+      navigate("datalist");
       setPageState(1);
     }
   
     const goToAddDataPage = () => {
-      navigate("manager/adddata");
+      navigate("adddata");
       setPageState(2);
-    }
-
-    const goToAddIkeaDataPage = () => {
-      navigate("manager/addIkeadata");
-      setPageState(3);
     }
     
 
@@ -35,14 +30,10 @@ const ManagerPage = ()=>{
             <div className='buttonBox' onClick={ goToAddDataPage }>
               <NavigatorElement buttonText = "Add Data" isClicked={pageState==2}/>
             </div>
-            <div className='buttonBox' onClick={ goToAddIkeaDataPage }>
-              <NavigatorElement buttonText = "Add Ikea Data" isClicked={pageState==3}/>
-            </div>
           </div>
             <Routes>
-              <Route path="manager/datalist" element={<DataList className = "item"/>} />
-              <Route path="manager/adddata" element={<AddData className = "item"/>} />
-              <Route path="manager/addikeadata" element={<AddIkeaData className = "item"/>} />
+              <Route path="datalist" element={<DataList className = "item"/>} />
+              <Route path="adddata" element={<AddData className = "item"/>} />
             </Routes>
         </div>
     )

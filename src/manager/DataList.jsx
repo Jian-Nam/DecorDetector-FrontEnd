@@ -19,33 +19,56 @@ const DataList = ()=>{
         }
     },[])
 
+    function getMaxPage(){
+        if(dataList){
+            return Math.floor(dataList.length/maxDataNumber)+1
+        }
+    }
+
     const getDataList = async()=>{
         try{
-            const response = await axios.get("http://localhost:8080/products");
+            const response = await axios.get(process.env.REACT_APP_BACKEND_URL + "/products");
             setDataList(response.data)
             console.log(response.data)
         }catch (error){
-            console.log(error)
+            alert(error)
         }
     }
 
     const deleteData = async(dataId)=>{
         console.log(dataId)
-        try{
-            const response = await axios.delete("http://localhost:8080/products/one?id="+String(dataId));
-            console.log(response.data);
-            getDataList();
-        }catch (error){
-            console.log(error)
+        var pwd = prompt("삭제를 원하시면 관리자에게 문의하세요 PASSWORD: ")
+        if(pwd == 3877){
+            try{
+                const response = await axios.delete(process.env.REACT_APP_BACKEND_URL + "/products/one?id="+ String(dataId));
+                console.log(response.data);
+                getDataList();
+            }catch (error){
+                alert(error)
+            }
         }
+        else{
+            alert("비밀번호가 틀렸습니다.")
+        }
+    }
+    const savePageNumber = (event)=>{
+        setPageNumber(parseInt(event.target.value))
     }
 
     const goToNextPage = ()=>{
-        setPageNumber(pageNumber+1)
+        setPageNumber(Math.min(pageNumber+1, getMaxPage()))
     }
 
     const goToPreviousPage = ()=>{
-        setPageNumber(pageNumber-1)
+        setPageNumber(Math.max(pageNumber-1, 0))
+    }
+
+    function range(start, end) {
+        let array = [];
+        for (let i = start; i < end+1; ++i) {
+          array.push(i);
+        }
+        return array;
     }
 
     return (
@@ -89,11 +112,20 @@ const DataList = ()=>{
 
             {(dataList) &&
                 <div>
-                    <span>1...</span>
-                    <button onClick={goToPreviousPage}>prev</button>
-                    <span>{ pageNumber}</span>
-                    <button onClick={goToNextPage}>next</button>
-                    <span>...{ Math.floor(dataList.length/maxDataNumber)+1 }</span>
+                    <span>페이지 번호 </span>
+                    <select 
+                        className='inputBox'        
+                        type="number" 
+                        value={pageNumber}
+                        onChange={savePageNumber}
+                    ><option value = "select" disabled={true}> 페이지 선택 </option>
+                        {   
+                            (dataList)&&
+                                range(1, getMaxPage()).map((k)=> (
+                                    <option key = {k} value = {k}>{k}</option>
+                                ))
+                        }
+                    </select>
                 </div>
             }   
         </div>

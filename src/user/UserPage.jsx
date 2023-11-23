@@ -7,8 +7,6 @@ import ResultList from './ResultList';
 import Button from '../Button';
 
 const UserPage = (ctrl)=>{
-    const backendUrl = "http://localhost:8080"
-    const envBackendUrl = process.env.REACT_APP_BACKEND_URL
 
     const [ctx, setCtx] = useState();
     const [targetImg, setTargetImg] = useState({
@@ -116,9 +114,8 @@ const UserPage = (ctrl)=>{
         formData.append('image', imgFile)
         formData.append('pointX', point.pointX)
         formData.append('pointY', point.pointY)
-        console.log("ENV TEST: " + envBackendUrl)
         axios({
-            url: backendUrl + "/products/similar",
+            url: process.env.REACT_APP_BACKEND_URL + "/products/similar",
             method: 'POST',
             data: formData,
             headers: {
@@ -169,7 +166,7 @@ const UserPage = (ctrl)=>{
         </div>
         <div id = "upload-wrapper">
             <label htmlFor="upload">
-                <Button buttonText="Select Image"></Button>
+                <Button buttonText={enableSearch? "이미지 업로드": "로딩 중..."}></Button>
                 <div className="buttonBox">
                 </div>
             </label>

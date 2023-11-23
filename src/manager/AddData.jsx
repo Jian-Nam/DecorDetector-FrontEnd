@@ -9,6 +9,7 @@ const AddData = ()=>{
     const [productNameValue, setProductNameValue] = useState('');
     const [imageLinkValue, setImageLinkValue] = useState('');
     const [productLinkValue, setProductLinkValue] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const saveEexternalId = event => {
         setEexternalId(event.target.value);
@@ -31,30 +32,35 @@ const AddData = ()=>{
       };
 
     const postData = async()=>{   
-        try{
-            if(externalIdValue=="" || productNameValue=="" || imageLinkValue=="" || productLinkValue==""){
-                alert("값을 모두 입력하세요")
-                return;
-            }
-            let formData = new FormData();
-        
-            formData.append('externalId', externalIdValue)
-            formData.append('productName', productNameValue)
-            formData.append('image', imageLinkValue)
-            formData.append('link', productLinkValue)
 
-            const response = await axios({
-                url: "http://localhost:8080/products/new",
-                method: 'POST',
-                data: formData,
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                },
-              })
-              console.log(response.data)
-        }catch (error){
-            console.log(error)
+        if(externalIdValue=="" || productNameValue=="" || imageLinkValue=="" || productLinkValue==""){
+            alert("값을 모두 입력하세요")
+            return;
         }
+        setLoading(true);
+        let formData = new FormData();
+    
+        formData.append('externalId', externalIdValue)
+        formData.append('productName', productNameValue)
+        formData.append('image', imageLinkValue)
+        formData.append('link', productLinkValue)
+
+        const response = await axios({
+            url: process.env.REACT_APP_BACKEND_URL + "/products/new",
+            method: 'POST',
+            data: formData,
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        }).then(response => {
+            console.log("BACKEND RESPONSE STATUS: " + response.status);
+            setLoading(false)
+            alert(response.data)
+        })
+        .catch(error => {
+            alert(error);
+        });
+
     }
 
     return (
@@ -109,7 +115,7 @@ const AddData = ()=>{
                     
                 </div>
                 <div onClick={postData}>
-                    <Button buttonText="등록"></Button>
+                    <Button buttonText={loading? "로딩중..." : "등록"}></Button>
                 </div>
                 
             </div>

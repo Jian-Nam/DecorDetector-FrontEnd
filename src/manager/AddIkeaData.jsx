@@ -39,7 +39,7 @@ const AddIkeaData = ()=>{
             formData.append('end', endValue)
 
             const response = await axios({
-                url: "http://localhost:8080/products/new/ikea",
+                url: process.env.REACT_APP_BACKEND_URL + "/products/new/ikea",
                 method: 'POST',
                 data: formData,
                 headers: {
